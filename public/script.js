@@ -190,14 +190,15 @@ if (Hls.isSupported()) {
   var hls = new Hls();
   hls.loadSource(src);
   hls.attachMedia(video);
-  hls.on(Hls.Events.MANIFEST_PARSED, () => {
-    setTimeout(() => video.play());
-  });
+  hls.on(Hls.Events.MANIFEST_PARSED, playVideo);
 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
   video.src = src;
-  video.addEventListener('canplay', () => {
-    video.play();
-  });
+  video.addEventListener('canplay', playVideo);
+}
+
+function playVideo() {
+  var promise = video.play();
+  promise && promise.catch(() => setTimeout(() => video.play(), 1000));
 }
 
 // for (var i = 0; i < 10; i++) {

@@ -1,7 +1,7 @@
 html, body {
   padding: 0;
   margin: 0;
-  font: normal 16px Quicksand,Helvetica,Arial,sans-serif;
+  font: normal 16px Helvetica, Arial, sans-serif;
   font-weight: 500;
   background: #222;
   color: #eee;
@@ -209,11 +209,13 @@ button:hover {
   margin: 0 10px;
   padding: 8px 0;
   border-bottom: solid 1px #444;
+  display: grid;
+  grid-template-columns: auto 1fr;
 }
 
 .message-avatar {
   margin-right: 10px;
-  float: left;
+  /* float: left; */
 }
 
 .message-avatar > img {

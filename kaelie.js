@@ -46,8 +46,12 @@ app.get('/:room', (req, res) => {
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.render('index', { production, room: roomId, title: room.title, src: room.src });
   } else {
-    res.statusCode(404);
+    res.status(404).end()
   }
+});
+
+app.get('/*', (req, res) => {
+  res.status(404).end();
 });
 
 const httpServer = http.createServer(app);
