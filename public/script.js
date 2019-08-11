@@ -130,7 +130,7 @@ function connect() {
 }
 
 function createAvatar(email) {
-  return 'https://www.gravatar.com/avatar/' + MD5(email) + '.jpg?s=64&d=identicon';
+  return 'https://www.gravatar.com/avatar/' + MD5(email.toLowerCase()) + '.jpg?s=64&d=identicon';
 }
 
 function elem(tag, className) {
