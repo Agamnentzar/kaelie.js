@@ -41,10 +41,11 @@ app.get('/:room', (req, res) => {
   const room = rooms.get(roomId);
 
   if (room) {
+    const src = Array.isArray(room.src) ? room.src : [room.src];
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.render('index', { production, room: roomId, title: room.title, src: room.src });
+    res.render('index', { production, room: roomId, title: room.title, src: src });
   } else {
     res.status(404).end()
   }
@@ -78,7 +79,7 @@ wsServer.on('connection', (ws, req) => {
   }
 
   room.clients.push(ws);
-  
+
   for (const message of room.messages) {
     ws.send(message);
   }
@@ -86,7 +87,7 @@ wsServer.on('connection', (ws, req) => {
   ws.on('message', message => {
     if (message === 'ping')
       return;
-    
+
     room.messages.push(message);
 
     while (room.messages.length > 50) {

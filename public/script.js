@@ -11,6 +11,7 @@ var gravatarElement = document.getElementById('gravatar');
 var colorElement = document.getElementById('color');
 var messagesElement = document.getElementById('messages');
 var optionsElement = document.getElementById('options');
+var videos = document.getElementById('videos');
 
 var defaultAvatar = '';
 var socketProtocol = location.protocol === 'https:' ? 'wss' : 'ws';
@@ -19,7 +20,7 @@ var socket = undefined;
 var user = { name: '', avatar: '', color: '#62cbff' };
 
 var room = document.body.dataset.room;
-var src = document.body.dataset.src;
+var srcs = JSON.parse(document.body.dataset.src);
 
 try {
   user = JSON.parse(localStorage.getItem('user')) || user;
@@ -185,21 +186,27 @@ function addMessage(message) {
   }
 }
 
-if (Hls.isSupported()) {
-  var video = document.getElementById('video');
-  var hls = new Hls();
-  hls.loadSource(src);
-  hls.attachMedia(video);
-  hls.on(Hls.Events.MANIFEST_PARSED, playVideo);
-} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-  video.src = src;
-  video.addEventListener('canplay', playVideo);
-}
+srcs.forEach(src => {
+  var video = document.createElement('video');
+  video.controls = true;
+  video.style.maxHeight = (100 / srcs.length) + '%';
+  videos.appendChild(video);
 
-function playVideo() {
-  var promise = video.play();
-  promise && promise.catch(() => setTimeout(() => video.play(), 1000));
-}
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource(src);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, playVideo);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = src;
+    video.addEventListener('canplay', playVideo);
+  }
+
+  function playVideo() {
+    var promise = video.play();
+    promise && promise.catch(() => setTimeout(() => video.play(), 1000));
+  }
+});
 
 // for (var i = 0; i < 10; i++) {
 //   addMessage({
